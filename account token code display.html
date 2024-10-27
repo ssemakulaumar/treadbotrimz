@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Data Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<h1>API Data Display</h1>
+<p id="status">Fetching data...</p>
+<table id="data-table">
+    <thead>
+        <tr>
+            <th>Field</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Data will be populated here -->
+    </tbody>
+</table>
+
+<script>
+    const apiToken = 'e62e33ba9d56179dc67eae5815ce9f3d69b6354f';
+    const apiUrl = 'https://api.example.com/data'; // Replace with the actual API endpoint
+
+    async function fetchData() {
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${apiToken}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            populateTable(data);
+            document.getElementById('status').innerText = 'Data fetched successfully!';
+        } catch (error) {
+            document.getElementById('status').innerText = `Error fetching data: ${error.message}`;
+        }
+    }
+
+    function populateTable(data) {
+        const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+        tableBody.innerHTML = ''; // Clear existing data
+
+        // Assuming data is an object with key-value pairs
+        for (const [key, value] of Object.entries(data)) {
+            const row = document.createElement('tr');
+            const cellKey = document.createElement('td');
+            const cellValue = document.createElement('td');
+            cellKey.textContent = key;
+            cellValue.textContent = value;
+
+            row.appendChild(cellKey);
+            row.appendChild(cellValue);
+            tableBody.appendChild(row);
+        }
+    }
+
+    // Fetch data on page load
+    window.onload = fetchData;
+</script>
+
+</body>
+</html>
